@@ -31,11 +31,33 @@ app.post('/sockets', (req, res) => {
     const { status, location } = req.body;
     const newSocket = {
         id: nextId++,
-        status,
+        status: status === "on" ? "on" : "off",
         location
     };
     sockets.push(newSocket);
     res.send(sockets.filter(v => v.id == newSocket.id));
-})
+});
+
+app.put('/sockets', (req, res) => {
+    const { id, status, location } = req.body;
+
+    const i = sockets.reduce(
+        (reqIndex, val, currIndex) =>
+        { 
+            if(id == val.id)
+                reqIndex = currIndex;
+            
+            return reqIndex;
+        },
+    -1);
+    if(i < 0) return res.send({});
+    
+    sockets[i] = {
+        id,
+        status,
+        location
+    };
+    res.send(sockets[i]);
+});
 
 app.listen(PORT);
