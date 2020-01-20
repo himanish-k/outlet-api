@@ -6,30 +6,26 @@ let sockets = [
     { id: 4, status: 'on', location: 'Canada' },
 ];
 
-exports.getSocketList = (req, res) => {
-    res.send(sockets);
+exports.getSocketList = () => {
+    return sockets;
 }
 
-exports.getSocket = (req, res) => {
-    const id = req.params.id;
+exports.getSocket = ({ id }) => {
     const filtered = sockets.filter(v => v.id == id);
-    res.send(filtered.length === 1 ? filtered[0] : {} );
+    return filtered.length === 1 ? filtered[0] : {};
 }
 
-exports.postSocket =  (req, res) => {
-    const { status, location } = req.body;
+exports.postSocket =  ({ status, location }) => {
     const newSocket = {
         id: nextId++,
         status: status === "on" ? "on" : "off",
         location
     };
     sockets.push(newSocket);
-    res.send(sockets.filter(v => v.id == newSocket.id));
+    return newSocket;
 };
 
-exports.putSocket = (req, res) => {
-    const { id, status, location } = req.body;
-
+exports.putSocket = ({ id, status, location }) => {
     const i = sockets.reduce(
         (reqIndex, val, currIndex) =>
         { 
@@ -39,12 +35,12 @@ exports.putSocket = (req, res) => {
             return reqIndex;
         },
     -1);
-    if(i < 0) return res.send({});
+    if(i < 0) return {};
     
     sockets[i] = {
         id,
         status,
         location
     };
-    res.send(sockets[i]);
+    return sockets[i];
 };

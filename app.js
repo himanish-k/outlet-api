@@ -7,10 +7,10 @@ const PORT = 3000;
 
 app.use(parse.json());
 
-app.get('/', getHome);
-app.get('/sockets', getSocketList);
-app.get('/sockets/:id', getSocket);
-app.post('/sockets', postSocket);
-app.put('/sockets', putSocket);
+app.get('/', (req, res) => res.send(getHome()));
+app.get('/sockets', (req, res) => res.send(getSocketList()));
+app.get('/sockets/:id', (req, res) => res.send(getSocket(req.params)));
+app.post('/sockets', (req, res) => res.send(postSocket(req.body)));
+app.put('/sockets', (req, res) => res.send(putSocket(req.body)));
 
 app.listen(PORT);
