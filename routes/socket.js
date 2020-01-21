@@ -8,14 +8,25 @@ let sockets = [
 
 exports.getSocketList = () => {
     return sockets;
-}
+};
 
-exports.getSocket = ({ id }) => {
+exports.getSocket = (params) => {
+    if(params === undefined || params === null)
+        return {};
+    
+    const { id } = params;
+    if(id === undefined)
+        return {};
+
     const filtered = sockets.filter(v => v.id == id);
     return filtered.length === 1 ? filtered[0] : {};
-}
+};
 
-exports.postSocket =  ({ status, location }) => {
+exports.postSocket =  (params) => {
+    if(params === undefined || params === null)
+        return {};
+    
+    const { status = '', location = '' } = params;
     const newSocket = {
         id: nextId++,
         status: status === "on" ? "on" : "off",
@@ -25,7 +36,19 @@ exports.postSocket =  ({ status, location }) => {
     return newSocket;
 };
 
-exports.putSocket = ({ id, status, location }) => {
+exports.putSocket = (params) => {
+    if(params === undefined || params === null)
+        return {};
+
+    const { id = null, status = '', location = '' } = params;
+
+    // if no id provided, return empty object
+    if(id === null)
+        return {};
+
+    // check if socket with passed in id exists
+    // in the system (is tracked in the array)
+    // if not, return empty object
     const i = sockets.reduce(
         (reqIndex, val, currIndex) =>
         { 
@@ -39,7 +62,7 @@ exports.putSocket = ({ id, status, location }) => {
     
     sockets[i] = {
         id,
-        status,
+        status: status === "on" ? "on" : "off",
         location
     };
     return sockets[i];
